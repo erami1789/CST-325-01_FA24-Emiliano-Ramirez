@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Project</title>
+    <script>
+        var sceneList =[];
+        var currentFrameNumber=0;
+
+        function init() {
+        console.log("Hello World!")
+        var newRectangleInstance = new Rectangle(20, 20, "rgb(0, 255, 0)"); 
+        var newRectangleInstance1 =new Rectangle(80, 20, "rgb(0, 255, 0)");
+        var newRectangleInstance2 =new Rectangle(140, 20, "rgb(0, 255, 0)");
+        newRectangleInstance.draw();
+
+        sceneList.push(newRectangleInstance);
+        sceneList.push(newRectangleInstance1);
+        sceneList.push(newRectangleInstance2);
+
+        updateAndDraw();
+
+    
+        }
+
+        
+        function Rectangle(x,y,color)
+        {
+            this.x=x;
+            this.y=y;
+            this.color=color;
+
+            this.draw =function()
+        {
+            const c = document.getElementById("myCanvas");
+            const ctx = c.getContext("2d");
+
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, 50, 50); 
+            ctx.strokeStyle = "black"; 
+            ctx.strokeRect(this.x, this.y, 50, 50);
+        } 
+        }
+        function updateAndDraw()
+        {
+            var canvas = document.getElementById("myCanvas");
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+
+            var newRectangleInstance3 = new Rectangle(Math.floor(Math.random() * (canvasWidth - 50)), Math.floor(Math.random() * (canvasHeight - 50)),`rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})` );
+            sceneList.push(newRectangleInstance3);
+            const c = document.getElementById("myCanvas");
+            const ctx = c.getContext("2d");
+            ctx.clearRect(0, 0, c.width, c.height);
+            sceneList.forEach(function(rectangle) {
+                rectangle.draw();
+
+            });
+            currentFrameNumber++;
+            console.log("Frame Count:"+ currentFrameNumber);
+            requestAnimationFrame(updateAndDraw);
+            updateStats();
+        }
+        function updateStats()
+        {
+            var p = document.getElementById("frameCount");
+            p.innerText = "Frame Count: " + currentFrameNumber;
+      
+            var p = document.getElementById("rectangleCount");
+            p.innerText = "Rectangles Count: " + sceneList.length;
+        }
+        window.onload = init;
+
+    </script>
+</head>
+<body>
+    <canvas id="myCanvas" width="300" height="200" style="border:1px solid gray;"></canvas>
+    <p id = "frameCount" >Frame Count 0</p>
+    <p id = "rectangleCount" >Rectangle Count 0</p>
+    <br>
+
+</body>
+</html>
