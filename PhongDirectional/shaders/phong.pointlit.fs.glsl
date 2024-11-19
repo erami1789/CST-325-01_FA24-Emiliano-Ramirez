@@ -1,6 +1,6 @@
 precision mediump float;
 
-uniform vec3 uLightDirection;
+uniform vec3 uLightPosition;
 uniform vec3 uCameraPosition;
 uniform sampler2D uTexture;
 
@@ -12,7 +12,12 @@ void main(void) {
     // diffuse contribution
     // todo #1 normalize the light direction and store in a separate variable
 
-    vec3 normalizedLightDir = normalize(uLightDirection);
+    //vec3 lightDirection = normalize(uLightPosition - vWorldPosition);
+
+    
+    vec3 lightDirection = normalize(vWorldPosition - uLightPosition);
+    
+
 
     // todo #2 normalize the world normal and store in a separate variable
 
@@ -20,7 +25,7 @@ void main(void) {
 
     // todo #3 calculate the lambert term
     
-    float lambertTerm = max(dot(normalizedNormal, normalizedLightDir), 0.0);
+    float lambertTerm = max(dot(normalizedNormal, lightDirection), 0.01);
     vec3 grayscale = vec3(lambertTerm);
 
     // specular contribution
@@ -30,7 +35,7 @@ void main(void) {
 
     // todo #5 in world space, calculate the reflection vector (normalized)
 
-    vec3 reflectionVector = normalize(reflect(-normalizedLightDir, normalizedNormal));
+    vec3 reflectionVector = normalize(reflect(lightDirection, normalizedNormal));
 
     // todo #6 calculate the phong term
 
@@ -52,16 +57,23 @@ void main(void) {
 
 
     vec3 albedo = texture2D(uTexture, vTexcoords).rgb;
-    vec3 ambient = albedo * lambertTerm ;
+
+    float valueofalbedo = 0.1;
+    vec3 ambient = albedo * valueofalbedo;
+    // vec3 ambient = albedo * lambertTerm ;
+    
 
     // vec3 diffuseColor = todo
     // vec3 specularColor = todo
 
     // todo #9
     // add "diffuseColor" and "specularColor" when ready
+    //vec3 finalColor = ambient + diffuseColor + specularColor;
     vec3 finalColor = ambient + diffuseColor + specularColor;
 
     gl_FragColor = vec4(finalColor, 1.0);
+
+    
 }
 
 // EOF 00100001-10
